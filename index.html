@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ru" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ssnake — Игра супер, без вирусов | Скачать APK</title>
+    <!-- Шрифты Inter и JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    boxShadow: {
+                        'neon-purple': '0 0 35px rgba(147, 51, 234, 0.45)',
+                        'neon-blue': '0 0 35px rgba(59, 130, 246, 0.45)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #07080f;
+            background-image: 
+                radial-gradient(circle at 20% 20%, rgba(147, 51, 234, 0.18) 0%, transparent 45%),
+                radial-gradient(circle at 80% 75%, rgba(59, 130, 246, 0.18) 0%, transparent 45%),
+                linear-gradient(rgba(30, 36, 66, 0.22) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(30, 36, 66, 0.22) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 36px 36px, 36px 36px;
+        }
+        .glass-panel {
+            background: rgba(15, 18, 33, 0.85);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+        }
+    </style>
+</head>
+<body class="text-slate-100 antialiased min-h-screen flex flex-col justify-between selection:bg-purple-600 selection:text-white">
+
+    <!-- Всплывающее уведомление -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-3 pointer-events-none max-w-xs w-[calc(100%-2.5rem)]"></div>
+
+    <!-- Компактная шапка -->
+    <header class="border-b border-slate-800/70 glass-panel">
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-purple-600 to-blue-600 flex items-center justify-center shadow-neon-purple">
+                    <svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                </div>
+                <span class="font-extrabold tracking-tight text-base bg-gradient-to-r from-white via-purple-200 to-blue-200 bg-clip-text text-transparent">
+                    SSNAKE<span class="text-purple-400">APK</span>
+                </span>
+            </div>
+
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                Онлайн
+            </span>
+        </div>
+    </header>
+
+    <!-- Центральный игровой блок -->
+    <main class="flex-grow flex items-center justify-center px-4 sm:px-6 py-10">
+        <section class="w-full max-w-2xl relative rounded-3xl border border-slate-800/90 glass-panel p-6 sm:p-10 shadow-2xl overflow-hidden text-center">
+            <!-- Неоновые блики -->
+            <div class="absolute -top-24 -left-24 w-60 h-60 bg-purple-600/25 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -bottom-24 -right-24 w-60 h-60 bg-blue-600/25 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="relative z-10 flex flex-col items-center">
+                <!-- Игровая SVG-иконка змейки (Ssnake) -->
+                <div class="relative mb-6 group">
+                    <div class="absolute -inset-1.5 bg-gradient-to-tr from-purple-600 via-blue-500 to-emerald-400 rounded-3xl blur opacity-70 group-hover:opacity-100 transition duration-500"></div>
+                    <div class="relative w-24 h-24 sm:w-28 sm:h-28 rounded-3xl bg-slate-900 border border-slate-700/80 flex items-center justify-center shadow-inner">
+                        <svg class="w-16 h-16 sm:w-20 sm:h-20" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <linearGradient id="pkgGrad" x1="12" y1="10" x2="68" y2="70" gradientUnits="userSpaceOnUse">
+                                    <stop offset="0%" stop-color="#A855F7"/>
+                                    <stop offset="50%" stop-color="#3B82F6"/>
+                                    <stop offset="100%" stop-color="#10B981"/>
+                                </linearGradient>
+                                <linearGradient id="snakeGrad" x1="22" y1="22" x2="58" y2="58" gradientUnits="userSpaceOnUse">
+                                    <stop offset="0%" stop-color="#34D399"/>
+                                    <stop offset="50%" stop-color="#10B981"/>
+                                    <stop offset="100%" stop-color="#06B6D4"/>
+                                </linearGradient>
+                            </defs>
+                            <!-- Шестиугольный неоновый щит -->
+                            <path d="M40 8L68 24V56L40 72L12 56V24L40 8Z" fill="url(#pkgGrad)" fill-opacity="0.16" stroke="url(#pkgGrad)" stroke-width="2.5" stroke-linejoin="round"/>
+                            <!-- Геометрическая змейка в форме S -->
+                            <path d="M50 25H34C29.5817 25 26 28.5817 26 33C26 37.4183 29.5817 41 34 41H46C50.4183 41 54 44.5817 54 49C54 53.4183 50.4183 57 46 57H30" stroke="url(#snakeGrad)" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <!-- Голова змейки и глаза -->
+                            <circle cx="50" cy="25" r="4.5" fill="#34D399"/>
+                            <circle cx="51.5" cy="23.8" r="1.1" fill="#0F172A"/>
+                            <circle cx="51.5" cy="26.2" r="1.1" fill="#0F172A"/>
+                            <!-- Раздвоенный язычок -->
+                            <path d="M54.5 25H58.5M58.5 25L60.5 23.2M58.5 25L60.5 26.8" stroke="#F43F5E" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                            <!-- Игровая сфера/яблоко -->
+                            <circle cx="25" cy="57" r="3" fill="#A855F7"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Название игры: Ssnake -->
+                <h1 class="text-5xl sm:text-6xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white via-purple-200 to-blue-300 drop-shadow-[0_0_24px_rgba(168,85,247,0.45)] mb-2">
+                    Ssnake
+                </h1>
+
+                <!-- Подзаголовок без воды -->
+                <p class="text-lg sm:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-300 to-blue-400 mb-7">
+                    Игра супер, без вирусов
+                </p>
+
+                <!-- Короткие четкие плашки/бейджи -->
+                <div class="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3 mb-8">
+                    <span class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-2xl bg-emerald-500/15 border border-emerald-500/35 text-emerald-300 text-xs sm:text-sm font-bold">
+                        <svg class="w-4 h-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                        </svg>
+                        Без вирусов
+                    </span>
+
+                    <span class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-2xl bg-blue-500/15 border border-blue-500/35 text-blue-300 text-xs sm:text-sm font-bold">
+                        <svg class="w-4 h-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                        </svg>
+                        Проверено
+                    </span>
+
+                    <span class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-2xl bg-purple-500/15 border border-purple-500/35 text-purple-300 text-xs sm:text-sm font-bold">
+                        <svg class="w-4 h-4 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                        </svg>
+                        Быстрая загрузка
+                    </span>
+                </div>
+
+                <!-- Метаданные: версия и размер -->
+                <div class="grid grid-cols-3 gap-2.5 sm:gap-4 w-full max-w-md mb-8">
+                    <div class="rounded-2xl bg-slate-900/90 border border-slate-800 py-3 px-3">
+                        <div class="text-[11px] text-slate-400">Версия</div>
+                        <div class="text-sm sm:text-base font-mono font-bold text-white mt-0.5">v1.0</div>
+                    </div>
+                    <div class="rounded-2xl bg-slate-900/90 border border-slate-800 py-3 px-3">
+                        <div class="text-[11px] text-slate-400">Размер</div>
+                        <div id="apk-size-badge" class="text-sm sm:text-base font-mono font-bold text-blue-300 mt-0.5">...</div>
+                    </div>
+                    <div class="rounded-2xl bg-slate-900/90 border border-slate-800 py-3 px-3">
+                        <div class="text-[11px] text-slate-400">Система</div>
+                        <div class="text-sm sm:text-base font-bold text-purple-300 mt-0.5">Android 7+</div>
+                    </div>
+                </div>
+
+                <!-- Крупная кнопка «Скачать APK» -->
+                <button id="download-btn" type="button"
+                    class="group relative w-full max-w-md py-5 px-8 rounded-2xl font-extrabold text-lg sm:text-xl text-white bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 hover:from-purple-500 hover:via-indigo-500 hover:to-blue-500 active:scale-[0.98] transition-all duration-200 shadow-neon-purple hover:shadow-neon-blue flex items-center justify-center gap-3.5 cursor-pointer">
+                    <svg class="w-7 h-7 transition-transform group-hover:translate-y-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                    </svg>
+                    <span id="download-btn-text">Скачать APK</span>
+                </button>
+
+                <!-- Компактный прогресс-бар -->
+                <div id="download-progress-wrapper" class="hidden w-full max-w-md mt-5">
+                    <div class="flex items-center justify-between text-xs mb-1.5">
+                        <span id="download-status-label" class="font-semibold text-purple-300">Загрузка Ssnake.apk...</span>
+                        <span id="download-percent-label" class="font-mono font-bold text-blue-300">0%</span>
+                    </div>
+                    <div class="w-full h-2.5 rounded-full bg-slate-900 border border-slate-800 overflow-hidden">
+                        <div id="download-progress-bar" class="h-full w-0 rounded-full bg-gradient-to-r from-purple-500 via-blue-500 to-emerald-400 transition-all duration-150"></div>
+                    </div>
+                </div>
+
+                <!-- Короткая подсказка в 1 строку -->
+                <p class="mt-6 text-xs sm:text-sm text-slate-400">
+                    Скачай <span class="font-mono text-slate-300">Ssnake.apk</span> → открой файл → нажми <span class="text-slate-200 font-semibold">«Установить»</span>
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Минималистичный подвал -->
+    <footer class="border-t border-slate-800/70 py-4 text-center text-xs text-slate-500">
+        Ssnake.apk • Android 7.0+ • Проверено, без вирусов
+    </footer>
+
+    <!-- Генерация валидного бинарного ZIP/APK-архива Ssnake.apk с AndroidManifest.xml и classes.dex -->
+    <script>
+        (function () {
+            'use strict';
+
+            const manifestXmlText = `<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.nexus.ssnake"
+    android:versionCode="1"
+    android:versionName="1.0"
+    android:compileSdkVersion="35">
+    <uses-sdk android:minSdkVersion="24" android:targetSdkVersion="35" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <application
+        android:allowBackup="true"
+        android:label="Ssnake"
+        android:theme="@android:style/Theme.DeviceDefault.NoActionBar">
+        <activity android:name=".MainActivity" android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>`;
+
+            function buildMinimalDexBytes() {
+// ... existing code ... -->
+                    const timer = setInterval(() => {
+                        const pct = steps[idx];
+                        progressBar.style.width = `${pct}%`;
+                        percentLabel.textContent = `${pct}%`;
+                        statusLabel.textContent = pct === 100 ? 'Готово! Файл скачан.' : 'Загрузка Ssnake.apk...';
+
+                        idx++;
+                        if (idx >= steps.length) {
+                            clearInterval(timer);
+
+                            const apkBlob = new Blob([apkBytes], { type: 'application/vnd.android.package-archive' });
+                            const downloadUrl = URL.createObjectURL(apkBlob);
+                            const link = document.createElement('a');
+                            link.href = downloadUrl;
+                            link.download = 'Ssnake.apk';
+                            document.body.appendChild(link);
+                            link.click();
+                            document.body.removeChild(link);
+
+                            setTimeout(() => URL.revokeObjectURL(downloadUrl), 5000);
+
+                            showToast('Скачивание началось', 'Файл Ssnake.apk (без вирусов) сохранён.');
+
+                            downloadBtn.classList.remove('opacity-85', 'cursor-wait');
+                            downloadBtnText.textContent = 'Скачать APK';
+                            isDownloading = false;
+                        }
+                    }, 160);
+                });
+            });
+        })();
+    </script>
+</body>
+</html>
+```
